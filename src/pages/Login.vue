@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div class="container">
         <!-- 关闭按钮 -->
-        <div class="close">
+        <div class="close" >
             <span class="iconfont iconicon-test"></span>
         </div>
 
@@ -11,12 +11,8 @@
         </div>
 
         <!-- 用户账号密码输入框 -->
-        <div>
-            <input type="text">
-        </div>
-        <div>
-            <input type="text">
-        </div>
+        <Authinput></Authinput>
+
 
         <!-- 登录按钮 -->
         <button>登录</button>
@@ -24,22 +20,31 @@
 </template>
 
 <script>
-export default {
+// 引入input组件
+import Authinput from '@/components/Authinput'
 
+export default {
+    data(){
+        return{}
+    },
+    components:{
+        Authinput
+    }
 }
 </script>
 
-<style lang='less'>
-
+<style scoped lang='less'>
+    .container{
+        padding: 20px
+    }
     .close{
-        padding: 20px;
-
         span{
             font-size: 27 / 320 *100vw;
         }
     }
     .logo{
         display: flex;
+        // 水平居中
         justify-content: center;
         span{
             display: block;
