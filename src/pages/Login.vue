@@ -11,11 +11,17 @@
         </div>
 
         <!-- 用户账号密码输入框 -->
-        <Authinput></Authinput>
+        <!-- 渲染组件 -->
+        <!-- input事件接收到子组件传值后触发handleusername事件 -->
+        <Authinput
+            placeholder="请输入手机号码"
+            :value="form.username"
+            @input="handleUsername"
+        ></Authinput>
 
 
         <!-- 登录按钮 -->
-        <button>登录</button>
+        <button @click="handelSubmit">登录</button>
     </div>
 </template>
 
@@ -25,8 +31,26 @@ import Authinput from '@/components/Authinput'
 
 export default {
     data(){
-        return{}
+        return{
+            form:{
+                username:"",
+                password:""
+            }
+        }
     },
+
+    methods:{
+        // 把子组件传来的值赋值给data里的username实现双向绑定
+        handleUsername(value){
+            this.form.username=value
+        },
+        handelSubmit(){
+            console.log(this.form);
+            
+        }
+
+    },
+    // 注册组件
     components:{
         Authinput
     }

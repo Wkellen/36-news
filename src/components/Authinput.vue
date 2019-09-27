@@ -1,12 +1,30 @@
 <template>
   <div>
-      <input type="text" class="input">
+        <!-- @input是原生事件，每次输入框有变化都会触发 -->
+      <input 
+        :placeholder="placeholder"
+        :value="value"
+        @input="handleInput"
+      class="input">
   </div>
 </template>
 
 <script>
 export default {
 
+    props:[
+        'placeholder',
+        'name',
+        'value',
+        'rule'
+    ],
+    methods:{
+        // 把用户输入值传给父组件事件名为input的事件
+        handleInput(event){
+            this.$emit("input",event.target.value)
+        }
+    }
+    
 }
 </script>
 
