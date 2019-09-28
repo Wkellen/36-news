@@ -14,21 +14,32 @@
         <!-- 渲染组件 -->
         <!-- input事件接收到子组件传值后触发handleusername事件 -->
         <Authinput
-            placeholder="请输入手机号码"
+            placeholder="手机号"
             :value="form.username"
             @input="handleUsername"
             :rule="/^1[0-9]{4,10}$/"
+            err_message="手机格式不正确哟，嘤嘤嘤~"
+        ></Authinput>
+
+
+        <Authinput
+            placeholder="密码"
+            v-model="form.password"
+            :rule="/^[0-9a-zA-Z]{3,12}$/"
+            err_message="你还有9999999次输错机会"
         ></Authinput>
 
 
         <!-- 登录按钮 -->
-        <button @click="handelSubmit">登录</button>
+        <!-- <button @click="handelSubmit">登录</button> -->
+        <AuthButton text="登录" @click="handelSubmit"></AuthButton>
     </div>
 </template>
 
 <script>
 // 引入input组件
-import Authinput from '@/components/Authinput'
+import Authinput from '@/components/AuthInput'
+import AuthButton from '@/components/AuthButton'
 
 export default {
     data(){
@@ -53,7 +64,8 @@ export default {
     },
     // 注册组件
     components:{
-        Authinput
+        Authinput,
+        AuthButton
     }
 }
 </script>
