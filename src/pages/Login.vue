@@ -17,6 +17,7 @@
             placeholder="请输入手机号码"
             :value="form.username"
             @input="handleUsername"
+            :rule="/^1[0-9]{4,10}$/"
         ></Authinput>
 
 

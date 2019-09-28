@@ -1,17 +1,27 @@
 <template>
   <div>
         <!-- @input是原生事件，每次输入框有变化都会触发 -->
+        <!-- 创建动态class，值可以为对象，key为类名，用值做判断，结果为true就添加key为类名，可叠加类名 -->
       <input 
+         class="input"
+         :class="{
+             success: status ==='success',
+             error: status ==='error'
+         }"
         :placeholder="placeholder"
         :value="value"
         @input="handleInput"
-      class="input">
+      >
   </div>
 </template>
 
 <script>
 export default {
-
+    data(){
+        return{
+            status:""
+        }
+    },
     props:[
         'placeholder',
         'name',
@@ -21,7 +31,17 @@ export default {
     methods:{
         // 把用户输入值传给父组件事件名为input的事件
         handleInput(event){
-            this.$emit("input",event.target.value)
+            // 结构赋值value
+            const {value} = event.target
+            this.$emit("input",value)
+
+            // 把值用正则做判断，如果是true赋值status为success，不是则为error
+            if (this.rule.test(value)){
+                this.status="success"
+           }else{
+               this.status="error"
+           }
+
         }
     }
     
@@ -35,8 +55,16 @@ export default {
         padding: 20px;
         border: none;
         background: #fff;
-        border-bottom: 1px #666 solid;
+        border: 1px #666 solid;
         box-sizing: border-box;
         outline: none
+    }
+
+    .success{
+        border: 2px blue solid;
+    }
+
+    .error{
+        border: 2px red solid;
     }
 </style>
