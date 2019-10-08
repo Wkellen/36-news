@@ -43,7 +43,8 @@ export default {
 
     handleChange() {
       if (this.err_message && this.status =="error") {
-        alert(this.err_message);
+        // alert(this.err_message);
+            this.$toast.fail(this.err_message)
       }
     }
   }
@@ -55,13 +56,14 @@ export default {
   width: 100%;
   height: 38 / 320 * 100vw;
   // padding: 20px;
+  margin-bottom: 20px;
   margin-top: 8px;
   border: none;
   background: #fff;
   border-bottom: 2px #666 solid;
   box-sizing: border-box;
   outline: none;
-  font-size: 18px
+  font-size: 18px;
 }
 
 .success {

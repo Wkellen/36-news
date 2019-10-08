@@ -1,8 +1,6 @@
 <template>
-  <div class="colorRed">
-
-      <div class="box"></div>
-      <router-link to="/login">登录页</router-link>
+  <div id="app">
+      
       <router-view></router-view>
 
   </div>
@@ -22,6 +20,7 @@ export default {
     /* 公共样式 */
     /* 阿里妈妈字体图标在线网址 */
     @import url('http://at.alicdn.com/t/font_1426139_h6vn3jbl5q.css');
+    @import url('../node_modules/vant/lib/index.css');
     
     *{
         margin: 0;

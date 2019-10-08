@@ -28,7 +28,7 @@ export default {
         border-radius: 50px;
         color: #fff;
         font-size: 18px;
-        margin-top: 48 / 320 * 100vw
+        // margin-top: 48 / 320 * 100vw
         
     }
 </style>

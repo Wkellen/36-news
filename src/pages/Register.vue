@@ -13,6 +13,7 @@
         <!-- 用户账号密码输入框 -->
         <!-- 渲染组件 -->
         <!-- input事件接收到子组件传值后触发handleusername事件 -->
+        <!-- 手机号输入框 -->
         <Authinput
             placeholder="手机号"
             :value="form.username"
@@ -21,7 +22,14 @@
             err_message="手机格式不正确哟，嘤嘤嘤~"
         ></Authinput>
 
-
+        <!-- 昵称输入框 -->
+        <Authinput
+            placeholder="昵称"
+            v-model="form.nickname"
+            :rule="/^[0-9a-zA-Z\u4e00-\u9fa5]{2,6}$/"
+            err_message="昵称格式不正确"
+        ></Authinput>        
+        <!-- 密码输入框 -->
         <Authinput
             type="password"
             placeholder="密码"
@@ -30,14 +38,14 @@
             err_message="你还有9999999次输错机会"
         ></Authinput>
 
-
-        <p class="tips">没有账号？
-        <router-link to="/register">去注册</router-link>
+        <!-- 提示 -->
+        <p class="tips">有账号？
+        <router-link to="/login">去登录</router-link>
         </p>
 
         <!-- 登录按钮 -->
         <!-- <button @click="handelSubmit">登录</button> -->
-        <AuthButton text="登录" @click="handelSubmit"></AuthButton>
+        <AuthButton text="注册" @click="handelSubmit"></AuthButton>
     </div>
 </template>
 
@@ -52,7 +60,8 @@ export default {
         return{
             form:{
                 username:"",
-                password:""
+                password:"",
+                nickname:""
             }
         }
     },
@@ -65,15 +74,15 @@ export default {
         handelSubmit(){
             // console.log(this.form);
             this.$axios({
-                url:"/login",
+                url:"/register",
                 method:"POST",
                 data:this.form, 
             }).then( res =>{
                 const {message} =res.data;
 
-                if(message ==="登录成功"){
+                if(message ==="注册成功"){
                     // 判断成功跳转到首页
-                    this.$router.push("/")
+                    this.$router.push("/login")
 
                 }
                 
