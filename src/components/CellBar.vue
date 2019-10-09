@@ -1,8 +1,8 @@
 <template>
-  <div class="cell-wrap">
+  <div class="cell-wrap" @click="$emit('click',$event)">
       <div class="cell">
-          <span>我的关注</span>
-          <i>关注的用户</i>
+          <span>{{label}}</span>
+          <i>{{text}}</i>
           <span class="iconfont iconjiantou1"></span>
       </div>
   </div>
@@ -10,7 +10,7 @@
 
 <script>
 export default {
-
+    props:["label", "text"]
 }
 </script>
 
