@@ -18,7 +18,7 @@
             :value="form.username"
             @input="handleUsername"
             :rule="/^1[0-9]{4,10}$/"
-            err_message="手机格式不正确哟，嘤嘤嘤~"
+            err_message="手机格式不正确"
         ></Authinput>
 
 
@@ -27,7 +27,7 @@
             placeholder="密码"
             v-model="form.password"
             :rule="/^[0-9a-zA-Z]{3,12}$/"
-            err_message="你还有9999999次输错机会"
+            err_message="密码格式不正确"
         ></Authinput>
 
 
@@ -69,9 +69,13 @@ export default {
                 method:"POST",
                 data:this.form, 
             }).then( res =>{
-                const {message} =res.data;
+                const {message,data} =res.data;
 
                 if(message ==="登录成功"){
+                    // 保存用户信息到本地
+                    localStorage.setItem("token",data.token);
+                    localStorage.setItem("user_id",data.user.id);
+
                     // 判断成功跳转到首页
                     this.$router.push("/personal")
 

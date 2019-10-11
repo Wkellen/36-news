@@ -1,12 +1,13 @@
 <template>
   <div>
     <div class="profile">
-      <img src="http://img5.imgtn.bdimg.com/it/u=3022648694,4206294211&fm=26&gp=0.jpg" alt="">
+      <!-- 读取axios的服务器基础路径拼接图片地址动态生成图片 -->
+      <img :src="$axios.defaults.baseURL + profile.head_img" alt="">
 
       <div class="profile-center">
           <div class="name">
               <span class="iconfont iconxingbienan"></span>
-              火星网友
+              {{profile.nickname}}
           </div>
           <div class="time">
             2019-10-09
@@ -30,9 +31,37 @@ import CellBar from '@/components/CellBar'
 
 
 export default {
+
+  data(){
+    return{
+      // 个人信息
+      profile:{
+
+      }
+    }
+  },
+
+  // 注册组件
   components:{
     CellBar
+  },
+  
+  mounted(){
+      // 请求个人资料接口
+      this.$axios({
+        url:"user/"+localStorage.getItem("user_id"),
+        // 添加头信息
+        headers:{
+          Authorization:localStorage.getItem("token")
+        }
+      }).then(res =>{
+        // console.log(res);
+        const {data} = res.data
+        this.profile = data
+        
+      })
   }
+  
 }
 </script>
 

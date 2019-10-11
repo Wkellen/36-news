@@ -19,7 +19,7 @@
             :value="form.username"
             @input="handleUsername"
             :rule="/^1[0-9]{4,10}$/"
-            err_message="手机格式不正确哟，嘤嘤嘤~"
+            err_message="手机格式不正确"
         ></Authinput>
 
         <!-- 昵称输入框 -->
@@ -35,7 +35,7 @@
             placeholder="密码"
             v-model="form.password"
             :rule="/^[0-9a-zA-Z]{3,12}$/"
-            err_message="你还有9999999次输错机会"
+            err_message="密码格式不正确"
         ></Authinput>
 
         <!-- 提示 -->
