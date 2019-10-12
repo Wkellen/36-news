@@ -37,6 +37,29 @@ const router = new VueRouter({
 });
 
 
+// 路由守卫
+// to是跳转之后的页面，到哪去
+// from是跳转之前的页面，从哪来
+// next（）必须要调用才会进行路径跳转，输入路径参数可以重定向
+router.beforeEach((to,from,next) => {
+    // 取得token数据做是否有token的判断
+    const hastoken = localStorage.getItem("token");
+    // console.log(to);
+    
+    // 如果跳转这个页面才进行判断，其他页面next
+    if(to.path =="/personal"){
+        // 判断是否有token，有的话继续跳转，没有跳转到登录页
+        if(hastoken){
+            next()
+        }else{
+            next("/login")
+        }
+    }else{
+        next()
+    }
+})
+
+
 // axios统一拦截器，拦截响应，如果用户名之类的错误进行提示，卸载路由对象后面
 axios.interceptors.response.use(res => {
     // console.log(res);
@@ -44,6 +67,11 @@ axios.interceptors.response.use(res => {
     
     if(statusCode === 401){
         Toast.fail(message)
+    };
+
+    // 如果本地token信息删除，修改，过期等失效，会导致用户信息失败，要重新登录
+    if(message ==="用户信息验证失败"){
+        router.push('/login')
     }
 
     return res;
