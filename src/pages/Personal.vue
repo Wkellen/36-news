@@ -2,7 +2,7 @@
   <div>
     <div class="profile">
       <!-- 读取axios的服务器基础路径拼接图片地址动态生成图片 -->
-      <img :src="$axios.defaults.baseURL + profile.head_img" alt="">
+      <img :src="profile.head_img" alt="">
 
       <div class="profile-center">
           <div class="name">
@@ -47,7 +47,7 @@ export default {
   },
   
   mounted(){
-      // 请求个人资料接口
+      // 发送ajax请求发送用户账户信息，获取返回的用户信息进行渲染
       this.$axios({
         url:"user/"+localStorage.getItem("user_id"),
         // 添加头信息
@@ -58,6 +58,12 @@ export default {
         // console.log(res);
         const {data} = res.data
         this.profile = data
+
+        if(data.head_img){
+          this.profile.head_img = this.$axios.defaults.baseURL + this.profile.head_img
+        }else{
+          this.profile.head_img = "./static/default.jpg"
+        }
         
       })
   }
