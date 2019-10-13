@@ -18,7 +18,7 @@
     <CellBar label="我的关注" text="关注的用户" />
     <CellBar label="我的跟帖" text="跟帖/回复" />
     <CellBar label="我的收藏" text="文章/视频" />
-    <CellBar label="设置" />
+    <CellBar label="注销登录" @click="handleLogout"/>
 >
   </div>
 </template>
@@ -39,6 +39,19 @@ export default {
   components: {
     CellBar
   },
+
+  methods:{
+    // 退出登录
+    handleLogout(){
+      // 清除token
+      localStorage.removeItem("token");
+      localStorage.removeItem("user_id");
+
+      // replace可以替换页面
+      this.$router.replace('/login')
+    }
+  },
+
 
   mounted() {
     // 发送ajax请求发送用户账户信息，获取返回的用户信息进行渲染
