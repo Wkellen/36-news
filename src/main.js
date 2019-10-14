@@ -13,6 +13,7 @@ import App from "@/App";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Personal from "@/pages/Personal";
+import EditProfile from "@/pages/EditProfile";
 
 // 在.vue文件中要使用router-link或者router-view.需要注册下插件
 Vue.use(VueRouter);
@@ -29,6 +30,7 @@ const routes = [
     { path: "/login", component: Login},
     { path: "/register", component: Register},
     { path: "/personal", component: Personal},
+    { path: "/edit_profile", component: EditProfile},
 ]
 
 // 路由：3.创建对象
@@ -47,7 +49,7 @@ router.beforeEach((to,from,next) => {
     // console.log(to);
     
     // 如果跳转这个页面才进行判断，其他页面next
-    if(to.path =="/personal"){
+    if(to.path === "/personal" || to.push ==="/edit_profile"){
         // 判断是否有token，有的话继续跳转，没有跳转到登录页
         if(hastoken){
             next()

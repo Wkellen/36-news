@@ -1,5 +1,6 @@
 <template>
   <div>
+    <router-link to="/edit_profile">
     <div class="profile">
       <!-- 读取axios的服务器基础路径拼接图片地址动态生成图片 -->
       <img :src="profile.head_img" alt />
@@ -13,6 +14,7 @@
       </div>
       <span class="iconfont iconjiantou1"></span>
     </div>
+    </router-link>
 
     <!-- 调用条形组件 -->
     <CellBar label="我的关注" text="关注的用户" />
