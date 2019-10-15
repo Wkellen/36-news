@@ -5,12 +5,12 @@
 
   <!-- 头像 -->
   <div class="head">
-    <img src="../../static/default.jpg" alt="">
+    <img :src="profile.head_img" alt="">
   </div>
   <!-- 导入条形组件 -->
-  <CellBar label="昵称" text="吉山网友" />
-  <CellBar label="密码" text="123" />
-  <CellBar label="性别" text="男" />
+  <CellBar label="昵称" :text="profile.nickname" />
+  <CellBar label="密码" :text="profile.password" type="password" />
+  <CellBar label="性别" :text="profile.gender === 1 ? '男' : '女'" />
 </div>
 
 </template>
@@ -21,10 +21,42 @@ import HeaderEdit from "@/components/HeaderEdit"
 import CellBar from "@/components/CellBar"
 
 export default {
+
+    data(){
+      return{
+        profile:{
+          
+        }
+      }
+    },
     components:{
         HeaderEdit,
         CellBar
-    }
+    },
+
+      mounted() {
+    // 发送ajax请求发送用户账户信息，获取返回的用户信息进行渲染
+    this.$axios({
+      url: "user/" + localStorage.getItem("user_id"),
+      // 添加头信息
+      headers: {
+        Authorization: localStorage.getItem("token")
+      }
+    }).then(res => {
+      // console.log(res);
+      const { data } = res.data;
+      if (data) {
+        this.profile = data;
+
+        if (data.head_img) {
+          this.profile.head_img =
+            this.$axios.defaults.baseURL + this.profile.head_img;
+        } else {
+          this.profile.head_img = "./static/default.jpg";
+        }
+      }
+    });
+  }
 }
 </script>
 

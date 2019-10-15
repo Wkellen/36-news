@@ -3,6 +3,7 @@
     <!-- @input是原生事件，每次输入框有变化都会触发 -->
     <!-- 创建动态class，值可以为对象，key为类名，用值做判断，结果为true就添加key为类名，可叠加类名 -->
     <input
+      :type="type"
       class="input"
       :class="{
              success: status ==='success',
@@ -23,7 +24,7 @@ export default {
       status: ""
     };
   },
-  props: ["placeholder", "name", "value", "rule", "err_message"],
+  props: ["placeholder", "name", "value", "rule", "err_message","type"],
   methods: {
     // 把用户输入值传给父组件事件名为input的事件
     handleInput(event) {
