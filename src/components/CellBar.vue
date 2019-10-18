@@ -3,7 +3,7 @@
       <div class="cell">
           <span>{{label}}</span>
           <!-- 用type来做判断改变文字的显示 -->
-          <i>{{ type==="password" ? "******" : text}}</i>
+          <i>{{ type==="password" ? "******" : celltext}}</i>
           <span class="iconfont iconjiantou1"></span>
       </div>
   </div>
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-    props:["label", "text", "type" ]
+    props:["label", "celltext", "type" ]
 }
 </script>
 

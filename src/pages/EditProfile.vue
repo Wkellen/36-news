@@ -8,18 +8,39 @@
       <img :src="profile.head_img" alt />
       <van-uploader :after-read="afterRead" class="uploader" />
     </div>
-    <!-- 导入条形组件 -->
-    <CellBar label="昵称" :text="profile.nickname" @click="show1 = !show1"/>
+    <!-- 导入昵称条形组件 -->
+    <CellBar label="昵称" :celltext="profile.nickname" @click="show1 = !show1" />
+    <!-- 弹出层 -->
     <!-- :value读取昵称，点取消不会被修改 -->
-    <van-dialog 
-    v-model="show1" 
-    title="编辑昵称"
-    @confirm="handleNickname"
-    show-cancel-button>
+    <van-dialog v-model="show1" title="编辑昵称" @confirm="handleNickname" show-cancel-button>
+    <!-- 编辑昵称输入框 -->
       <van-field :value="profile.nickname" placeholder="请输入新昵称" ref="nickname" />
     </van-dialog>
-    <CellBar label="密码" :text="profile.password" type="password" />
-    <CellBar label="性别" :text="profile.gender === 1 ? '男' : '女'" />
+
+    <!-- 导入密码条形组件 -->
+    <CellBar label="密码" :celltext="profile.password" type="password" @click="show2 = !show2" />
+    <!-- 弹出层 -->
+    <van-dialog v-model="show2" title="修改密码" @confirm="handlePassword" show-cancel-button>
+    <!-- 编辑密码输入框 -->
+      <van-field placeholder="请输入新密码" ref="password" />
+    </van-dialog>
+
+    <!-- 导入性别条形组件 -->
+    <CellBar label="性别" :celltext="profile.gender === 1 ? '男' : '女'" @click="show3 = !show3" />
+    <!-- 弹出层 -->
+    <van-dialog v-model="show3" title="编辑性别" @confirm="handleGender" show-cancel-button>
+      <!-- 性别选择组件 -->
+      <van-radio-group v-model="genderCache">
+        <van-cell-group>
+          <van-cell title="男" clickable @click="genderCache = '1'">
+            <van-radio slot="right-icon" name="1" />
+          </van-cell>
+          <van-cell title="女" clickable @click="genderCache = '0'">
+            <van-radio slot="right-icon" name="0" />
+          </van-cell>
+        </van-cell-group>
+      </van-radio-group>
+    </van-dialog>
   </div>
 </template>
 
@@ -32,7 +53,14 @@ export default {
   data() {
     return {
       profile: {},
-      show1: false
+      // 昵称弹窗
+      show1: false,
+      // 密码弹窗
+      show2: false,
+      // 性别弹窗
+      show3: false,
+      // 储存性别
+      genderCache:"1"
     };
   },
 
@@ -42,6 +70,32 @@ export default {
   },
 
   methods: {
+    // 封装编辑接口的函数
+    //data表示要传给服务器的数据
+    editprofile(data, callback) {
+      // 判断是否有传入数据
+      if (!data) {
+        return;
+      }
+      this.$axios({
+        url: `/user_update/` + localStorage.getItem("user_id"),
+        method: "POST",
+        headers: { Authorization: localStorage.getItem("token") },
+        data
+      }).then(res => {
+        const { message } = res.data;
+        // 如果成功提示
+        if (message === "修改成功") {
+          // 传入回调函数
+          // 也可以这样写callback && callback()
+          if (callback) {
+            callback();
+          }
+          this.$toast.success(message);
+        }
+      });
+    },
+
     // 将图片上传给服务器并修改头像
     afterRead(file) {
       // 触发回调函数获取文件对象
@@ -64,45 +118,28 @@ export default {
         // 用响应数据的图片链接替换用户头像
         this.profile.head_img = this.$axios.defaults.baseURL + data.url;
 
-        //  完全修改用户的头像
-        this.$axios({
-          url: `/user_update/` + localStorage.getItem("user_id"),
-          method: "POST",
-          headers: { Authorization: localStorage.getItem("token") },
-          data: {
-            head_img: data.url
-          }
-        }).then(res => {
-          const { message } = res.data;
-          if (message === "修改成功") {
-            this.$toast.success(message);
-          }
-        });
+        //  完全修改用户的头像,调用函数
+        this.editprofile({ head_img: data.url });
       });
     },
 
     // 编辑昵称确认键触发事件
-    handleNickname(){
+    handleNickname() {
       // 拿到输入框的值
-      const value = this.$refs.nickname.$refs.input.value
+      const value = this.$refs.nickname.$refs.input.value;
 
       // 提交到服务器接口
-        this.$axios({
-          url: `/user_update/` + localStorage.getItem("user_id"),
-          method: "POST",
-          headers: { Authorization: localStorage.getItem("token") },
-          data: {
-            nickname: value
-          }
-        }).then(res => {
-          const { message } = res.data;
-          // 如果成功提示
-          if (message === "修改成功") {
-            this.profile.nickname = value;
+      this.editprofile({ nickname: value }, () => {
+        this.profile.nickname = value;
+      });
+    },
+    // 编辑密码确认键触发事件
+    handlePassword() {
+      // 拿到输入框的值
+      const value = this.$refs.password.$refs.input.value;
 
-            this.$toast.success(message);
-          }
-        });
+      // 提交到服务器接口
+      this.editprofile({ password: value });
     }
   },
 
@@ -117,8 +154,11 @@ export default {
     }).then(res => {
       // console.log(res);
       const { data } = res.data;
+      // 如果有返回data数据的话
       if (data) {
         this.profile = data;
+        // 把接收到数据的性别值赋值给genderCache
+        this.genderCache = String(data.gender);
 
         if (data.head_img) {
           this.profile.head_img =
