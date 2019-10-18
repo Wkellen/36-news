@@ -9,7 +9,15 @@
       <van-uploader :after-read="afterRead" class="uploader" />
     </div>
     <!-- 导入条形组件 -->
-    <CellBar label="昵称" :text="profile.nickname" />
+    <CellBar label="昵称" :text="profile.nickname" @click="show1 = !show1"/>
+    <!-- :value读取昵称，点取消不会被修改 -->
+    <van-dialog 
+    v-model="show1" 
+    title="编辑昵称"
+    @confirm="handleNickname"
+    show-cancel-button>
+      <van-field :value="profile.nickname" placeholder="请输入新昵称" ref="nickname" />
+    </van-dialog>
     <CellBar label="密码" :text="profile.password" type="password" />
     <CellBar label="性别" :text="profile.gender === 1 ? '男' : '女'" />
   </div>
@@ -23,7 +31,8 @@ import CellBar from "@/components/CellBar";
 export default {
   data() {
     return {
-      profile: {}
+      profile: {},
+      show1: false
     };
   },
 
@@ -38,38 +47,62 @@ export default {
       // 触发回调函数获取文件对象
       // console.log(file);
       // 构造表单
-      const formdata = new FormData
+      const formdata = new FormData();
       // 添加表单数据
-      formdata.append("file",file.file)
+      formdata.append("file", file.file);
 
       // 将表单数据发送给服务器
       this.$axios({
-        url:"/upload",
-        method:"POST",
-      // 添加头信息
-      headers: {  Authorization: localStorage.getItem("token")},
-      //  上传表单数据
-       data:formdata
-     }).then(res => {
-       const {data} = res.data;
-      // 用响应数据的图片链接替换用户头像
-       this.profile.head_img = this.$axios.defaults.baseURL + data.url;
-       
-      //  完全修改用户的头像
-      this.$axios({
-        url:`/user_update/` +localStorage.getItem("user_id"),
-        method:"POST",
-        headers: { Authorization: localStorage.getItem("token")},
-        data:{
-          head_img:data.url
-        }      
+        url: "/upload",
+        method: "POST",
+        // 添加头信息
+        headers: { Authorization: localStorage.getItem("token") },
+        //  上传表单数据
+        data: formdata
       }).then(res => {
-        const {message} =res.data;
-        if(message ==="修改成功"){
-          this.$toast.success(message)
-        }
-      })
-     })
+        const { data } = res.data;
+        // 用响应数据的图片链接替换用户头像
+        this.profile.head_img = this.$axios.defaults.baseURL + data.url;
+
+        //  完全修改用户的头像
+        this.$axios({
+          url: `/user_update/` + localStorage.getItem("user_id"),
+          method: "POST",
+          headers: { Authorization: localStorage.getItem("token") },
+          data: {
+            head_img: data.url
+          }
+        }).then(res => {
+          const { message } = res.data;
+          if (message === "修改成功") {
+            this.$toast.success(message);
+          }
+        });
+      });
+    },
+
+    // 编辑昵称确认键触发事件
+    handleNickname(){
+      // 拿到输入框的值
+      const value = this.$refs.nickname.$refs.input.value
+
+      // 提交到服务器接口
+        this.$axios({
+          url: `/user_update/` + localStorage.getItem("user_id"),
+          method: "POST",
+          headers: { Authorization: localStorage.getItem("token") },
+          data: {
+            nickname: value
+          }
+        }).then(res => {
+          const { message } = res.data;
+          // 如果成功提示
+          if (message === "修改成功") {
+            this.profile.nickname = value;
+
+            this.$toast.success(message);
+          }
+        });
     }
   },
 
